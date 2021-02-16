@@ -1,4 +1,4 @@
-const socket = io.connect('http://192.168.0.126:3000');
+const socket = io.connect(window.location.origin);
 
 if(localStorage.getItem('name') === null) {
   var person = prompt("Como quer ser chamado(a) ?", "");
