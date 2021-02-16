@@ -1,9 +1,10 @@
 const express = require('express');
 const app = express();
+const port = process.env.PORT || 3000
 
 app.use('/', express.static(__dirname + '/public'));
-
-server = app.listen(3000, console.log('open'));
+app.get('/tx', (req, res) => res.send('Hello world'))
+server = app.listen(port, console.log('Visit in', port));
 
 var clients = {}
 
