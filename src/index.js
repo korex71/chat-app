@@ -3,7 +3,7 @@ const app = express();
 
 app.use('/', express.static(__dirname + '/public'));
 
-server = app.listen(80, console.log('open'));
+server = app.listen(3000, console.log('open'));
 
 var clients = {}
 
