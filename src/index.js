@@ -3,7 +3,7 @@ const app = express();
 const port = process.env.PORT || 3000
 
 app.use('/', express.static(__dirname + '/public'));
-app.get('/tx', (req, res) => res.send('Hello world'))
+
 server = app.listen(port, console.log('Visit in', port));
 
 var clients = {}
@@ -13,6 +13,7 @@ const chat_history = new Array();
 const io = require('socket.io')(server);
 
 io.on('connection', client => {
+  
   client.on("join", function(name){
     console.log("Joined: " + name);
     clients[client.id] = name;

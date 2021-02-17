@@ -2,7 +2,7 @@ const socket = io.connect(window.location.origin);
 
 if(localStorage.getItem('name') === null) {
   var person = prompt("Como quer ser chamado(a) ?", "");
-  if (person == null || person == "") {
+  if (person == null || person == "" || undefined) {
     person = prompt("Como quer ser chamado(a) ?", "");
   } else {
     localStorage.setItem('name', person);
@@ -21,7 +21,7 @@ const act = {
     let d = new Date();
     let n = d.getHours();
     let s = d.getMinutes();
-    let hours = n + ':' + (s <= 10 ? '0' + s : s)
+    let hours = n + ':' + (s < 10 ? '0' + s : s)
     return hours
   },
   data: () => {
