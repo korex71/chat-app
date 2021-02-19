@@ -1,8 +1,8 @@
 const socket = io.connect(window.location.origin);
-
-if(localStorage.getItem('name') === null) {
-  var person = prompt("Como quer ser chamado(a) ?", "");
-  if (person == null || person == "" || undefined) {
+var person;
+if(!localStorage.getItem('name')) {
+  person = prompt("Como quer ser chamado(a) ?", "");
+  if (!person) {
     person = prompt("Como quer ser chamado(a) ?", "");
   } else {
     localStorage.setItem('name', person);
@@ -18,47 +18,43 @@ socket.on('getName', () => {
 
 const act = {
   hora: () => {
-    let d = new Date();
-    let n = d.getHours();
-    let s = d.getMinutes();
-    let hours = n + ':' + (s < 10 ? '0' + s : s)
-    return hours
+    let d = new Date(),
+      [h, m] = [new Date(), d.getHours(), d.getMinutes()]
+    return h + ':' + m < 10 ? '0' + m : m
   },
   data: () => {
-    let d = new Date();
-    let dia = d.getDate();
-    let m = d.getMonth();
-    let mes = new Array(
-      'janeiro', 'fevereiro', 'março', 'abril', 'maio',
-      'junho', 'julho', 'agosto', 'setembro', 'outubro',
-      'novembro', 'dezembro'
-    )
-    return (dia + ' de ' + mes[m])
+    let d = new Date(),
+      [dia, m] = [d.getDate(), d.getMonth()],
+      mes = [
+        'janeiro', 'fevereiro', 'março', 
+        'abril', 'maio', 'junho', 
+        'julho', 'agosto', 'setembro', 
+        'outubro', 'novembro', 'dezembro'
+      ];
+    return `${dia} de ${mes[m]}`
   }
   
 }
 
 socket.on('history', data => {
   msgHistory(data)
-  console.log(data)
+  console.log('*** Histórico recebido:', data)
 })
 
 $('#msg').keypress(e => {
-  if(e.keyCode == 13){
-    e.preventDefault()
-    sendMessage()
-  }
+    if(e.keyCode == 13) {
+      e.preventDefault()
+      sendMessage()
+    }
 })
 
-$('#send_msg').on('click', () => {
-  sendMessage()
-})
+$('#send_msg').on('click', () => sendMessage())
 
 function sendMessage() {
+  if(!$('#msg').val()) return
   let msg = $('#msg').val(); $('#msg').val('')
-  let hora = act.hora();
-  let send = {msg, hora, data: act.data()}
-  console.log($('#msg').val(), act.hora(), act.data())
+  let send = {msg, hora: act.hora(), data: act.data()}
+  console.log('*** Emitindo: new_message com', send)
   socket.emit('new_message', send)
 }
 
@@ -100,9 +96,9 @@ function msgHistory(data) {
     ${act.data()}
   </div> `);
   data.map(item => {
-    if(item.username == localStorage.getItem('name')){
+    let user = item.username == localStorage.getItem('name') ? 'user' : ''
       $('#appCapsule').append(`
-      <div class="message-item user">
+      <div class="message-item ${user}">
       <div class="content">
           <div class="bubble">
               ${item.message}
@@ -111,19 +107,5 @@ function msgHistory(data) {
       </div>
       </div>
     `) 
-    }else{
-      $('#appCapsule').append(`
-      <div class="message-item">
-      <img src="assets/img/default-user-image.png" alt="avatar" class="avatar">
-      <div class="content">
-          <div class="title">${item.username}</div>
-          <div class="bubble">
-              ${item.message}
-          </div>
-          <div class="footer">${item.hour}</div>
-      </div>
-      </div>
-    `) 
-    }
   })
 }
