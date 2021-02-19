@@ -19,7 +19,7 @@ socket.on('getName', () => {
 const act = {
   hora: () => {
     let d = new Date(),
-      [h, m] = [new Date(), d.getHours(), d.getMinutes()]
+      [h, m] = [d.getHours(), d.getMinutes()]
     return h + ':' + m < 10 ? '0' + m : m
   },
   data: () => {
