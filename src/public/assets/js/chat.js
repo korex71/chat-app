@@ -49,6 +49,7 @@ function sendMessage() {
 
 socket.on('user_msg', data => {
   if(!data) return
+  window.scrollTo(0, document.body.scrollHeight);
   console.log('Mensagem:', data)
   if(data.username == socket.id){
     $('#appCapsule').append(`
@@ -85,7 +86,7 @@ function msgHistory(data) {
     ${act.data()}
   </div> `);
   data.map(item => {
-    let user = item.username == socket.id? 'user' : ''
+    let user = item.username == socket.id ? 'user' : ''
       $('#appCapsule').append(`
       <div class="message-item ${user}">
       <div class="content">
