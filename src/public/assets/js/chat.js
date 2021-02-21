@@ -1,26 +1,15 @@
 const socket = io.connect(window.location.origin);
-var person;
-if(!localStorage.getItem('name')) {
-  person = prompt("Como quer ser chamado(a) ?", "");
-  if (!person) {
-    person = prompt("Como quer ser chamado(a) ?", "");
-  } else {
-    localStorage.setItem('name', person);
-    socket.emit('join', person);
-  };
-}else{
-  socket.emit('join', localStorage.getItem('name'))
-}
 
-socket.on('getName', () => {
-  socket.emit('join', localStorage.getItem('name'))
+socket.on('connect', client => {
+  socket.emit('join', socket.id)
 })
 
 const act = {
   hora: () => {
     let d = new Date(),
-      [h, m] = [d.getHours(), d.getMinutes()]
-    return h + ':' + m < 10 ? '0' + m : m
+    h = d.getHours(),
+    m = d.getMinutes();
+    return (h + ':' + (m < 10 || m == 0 ? '0' + m : m))
   },
   data: () => {
     let d = new Date(),
@@ -61,7 +50,7 @@ function sendMessage() {
 socket.on('user_msg', data => {
   if(!data) return
   console.log('Mensagem:', data)
-  if(data.username == localStorage.getItem('name')){
+  if(data.username == socket.id){
     $('#appCapsule').append(`
       <div class="message-item user">
       <div class="content">
@@ -96,7 +85,7 @@ function msgHistory(data) {
     ${act.data()}
   </div> `);
   data.map(item => {
-    let user = item.username == localStorage.getItem('name') ? 'user' : ''
+    let user = item.username == socket.id? 'user' : ''
       $('#appCapsule').append(`
       <div class="message-item ${user}">
       <div class="content">
