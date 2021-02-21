@@ -98,4 +98,5 @@ function msgHistory(data) {
       </div>
     `) 
   })
+  $('html, body').animate({scrollTop: document.body.scrollHeight},"fast");
 }
