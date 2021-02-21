@@ -49,7 +49,6 @@ function sendMessage() {
 
 socket.on('user_msg', data => {
   if(!data) return
-  window.scrollTo(0, document.body.scrollHeight);
   console.log('Mensagem:', data)
   if(data.username == socket.id){
     $('#appCapsule').append(`
@@ -76,6 +75,7 @@ socket.on('user_msg', data => {
       </div>
     `) 
   }
+  $('html, body').animate({scrollTop: document.body.scrollHeight},"fast");
 });
 
 function msgHistory(data) {
